@@ -1,0 +1,189 @@
+<!DOCTYPE HTML>
+<html>
+  
+<head>
+    <title>
+        Pong Game
+    </title>
+    <style>
+        h1 {
+        	color: #330866;
+        }
+        canvas {
+            background-color: #330866;
+        }
+    </style>
+  
+</head>
+  
+<body>
+    <center>
+    	<h1>Play Pong :)</h1>
+        <canvas>
+        </canvas>
+        <script>
+            var canvas = document.querySelector("canvas");
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            var p = canvas.getContext('2d');
+            
+            //colors :)
+            var colors = ["aquamarine", "crimson", "darkorchid", "deeppink", "goldenrod", "lime", "mediumblue", "orangered", "yellow", "plum", "olive", "#F3F2F1", "#E1DCD6", "#FFE85A", "#FFE300", "#38DCFF", "#23BCE7", "#F55252", "#E01010", "purple", "green"];
+        	var currentColor = Math.floor(Math.random() * colors.length);;
+  
+            //ball  			
+            var ball = {
+          	  x: innerWidth/2,	
+              y: innerHeight/2,
+              xMove: 2,
+              yMove: 3,
+              radius: innerWidth * 0.02
+            }
+            
+            //left paddle
+            var leftPaddle = {
+              x: 0,
+              y: 0,
+              speed: innerHeight/150,
+            };
+
+            //right paddle
+            var rightPaddle = {
+              x: innerWidth * 0.97,
+              y: 0,
+              speed: innerHeight/150.
+            };
+            
+            var pWidth = innerWidth * 0.03;
+            var pLength = innerHeight* 0.3;
+            
+            //points!
+            var comPoints = 0;
+            var p1Points = 0;
+         
+            move();
+            
+            // This function will do the animation
+            function move() {
+                requestAnimationFrame(move);
+                p.clearRect(0, 0, innerWidth, innerHeight);
+                
+                //center line
+                p.beginPath();
+                p.strokeStyle = "white";
+                p.lineWidth = 5
+                p.moveTo(innerWidth/2, 0);
+                p.lineTo(innerWidth/2, innerHeight);
+                p.stroke();
+                
+                //pointss
+                p.font="15px Serif";
+                p.fillStyle = "white";
+                p.textAlign = "center";
+                p.fillText("Computer Points: " + comPoints.toString(), canvas.width/4, canvas.height/10);
+                p.fillText("Your Points: " + p1Points.toString(), (canvas.width*3)/4, canvas.height/10);
+  
+                // ball!
+                p.beginPath();
+                p.strokeStyle = colors[currentColor];
+                p.fillStyle = colors[currentColor];
+                p.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+                p.fill();
+                p.stroke();
+  
+                // keeps ball in bounds (top/bottom)
+                if (ball.y + ball.radius > innerHeight)
+                    ball.yMove *= -1;
+
+                if (ball.y - ball.radius < 0)
+                    ball.yMove *= -1;
+                    
+                //computer side of game
+                if (ball.x - ball.radius < pWidth){
+                	if (leftPaddle.y < ball.y - ball.radius && ball.y + ball.radius < leftPaddle.y + pLength){
+                    	ball.xMove *= -1;
+                    }else{
+                    	p1Points += 1;
+                        ball.x = innerWidth/2;	
+              			ball.y = innerHeight/2;
+                        xMove = 1 + (Math.random() * 1.5);
+                        yMove = 1 + (Math.random() * 2.5);
+                        
+                        currentColor += 1;
+                        if (currentColor == colors.length)
+                        	currentColor = 0;
+                    }
+                }
+                
+                //player bounce
+                if (ball.radius*2 + ball.x + pWidth > innerWidth){
+                	if (rightPaddle.y < ball.y && ball.y < rightPaddle.y + pLength){
+                    	ball.xMove *= -1;
+                    }else{
+                    	comPoints += 1;
+                        ball.x = innerWidth/2;	
+              			ball.y = innerHeight/2;
+                        xMove = 1 + (Math.random() * 1.5);
+                        yMove = 1 + (Math.random() * 2.5); //keeps it spicy
+                        
+                        currentColor += 1;
+                        if (currentColor == colors.length)
+                        	currentColor = 0;
+                    }
+                }
+                
+                if (ball.radius + ball.x > innerWidth)
+                    ball.xMove *= -1;
+
+				//moves ball
+                ball.x += ball.xMove;
+                ball.y += ball.yMove;
+                
+                //left paddle
+                p.beginPath();
+                p.lineWidth = "4";
+                p.strokeStyle = "white";
+                p.rect(leftPaddle.x, leftPaddle.y, pWidth, innerHeight* 0.3);
+                p.stroke();
+                
+                if (leftPaddle.y < 0)
+                  leftPaddle.speed *= -1;
+
+                if (leftPaddle.y + pLength > innerHeight)
+                  leftPaddle.speed *= -1;
+
+                leftPaddle.y += leftPaddle.speed;
+                
+                //right paddle
+                p.beginPath();
+                p.lineWidth = "4";
+                p.strokeStyle = "white";
+                p.rect(rightPaddle.x, rightPaddle.y, pWidth, pLength);
+                p.stroke();
+                
+                document.addEventListener("keyup", function(){
+  					rightPaddle.speed = -1 * innerHeight/150;
+				});
+                
+                document.addEventListener("keydown", function(){
+  					rightPaddle.speed = innerHeight/150;
+				});
+                
+                /*
+                //temporary, moves it up and down:
+                if (rightPaddle.y < 0)
+                  rightPaddle.speed *= -1;
+                  
+                if (rightPaddle.y + pLength > innerHeight)
+                  rightPaddle.speed *= -1;  
+                */
+                
+                rightPaddle.y += rightPaddle.speed;
+                
+  
+            }
+        </script>
+    </center>
+</body>
+  
+</html>
