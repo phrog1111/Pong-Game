@@ -162,12 +162,12 @@
                 p.stroke();
                 
                 document.addEventListener("keyup", function(){
-  					rightPaddle.speed = -1 * innerHeight/150;
-				});
+			rightPaddle.speed = -1 * innerHeight/150;
+		});
                 
                 document.addEventListener("keydown", function(){
-  					rightPaddle.speed = innerHeight/150;
-				});
+			rightPaddle.speed = innerHeight/150;
+		});
                 
                 /*
                 //temporary, moves it up and down:
@@ -178,9 +178,7 @@
                   rightPaddle.speed *= -1;  
                 */
                 
-                rightPaddle.y += rightPaddle.speed;
-                
-  
+                rightPaddle.y += rightPaddle.speed;  
             }
         </script>
     </center>
